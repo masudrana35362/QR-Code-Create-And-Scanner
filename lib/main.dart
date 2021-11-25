@@ -1,33 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:scanner/screen/qr_create.dart';
 import 'package:scanner/screen/qr_scanner.dart';
+import 'package:scanner/widget/button_widget.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  static final String title = 'QR Code Scanner';
 
-  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: title,
+        theme: ThemeData(
+          primaryColor: Colors.red,
+          scaffoldBackgroundColor: Colors.black,
+        ),
+        home: MainPage(title: title),
+      );
+}
+
+class MainPage extends StatefulWidget {
+  final String title;
+
+  MainPage({
+    required this.title,
+  });
+
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
       ),
-      home: const QRScanner(),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ButtonWidget(
+                text: 'Create QR Code',
+                onClicked: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => QRCreatePage()))),
+            SizedBox(
+              height: 32,
+            ),
+            ButtonWidget(
+                text: 'Scan QR Code',
+                onClicked: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => QRScanner())))
+          ],
+        ),
+      ),
     );
   }
 }
-
-
